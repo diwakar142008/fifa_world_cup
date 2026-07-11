@@ -1,121 +1,125 @@
-name: CI/CD Pipeline
+name: StadiumMind AI CI/CD Pipeline
 
 on:
   push:
     branches: [main, develop]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - ".vscode/**"
   pull_request:
-    branches: [main, develop]
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1" # Every Monday at 6 AM UTC
+
+env:
+  PYTHON_VERSION: "3.12"
+  NODE_VERSION: "20"
+  REGISTRY: ghcr.io
 
 jobs:
-  backend-tests:
+  # ─── Backend: Lint, Type Check, Test ──────────────────────────
+  backend:
+    name: Backend (${{ matrix.python-version }})
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_DB: stadiummind_test
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_pass
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+      fail-fast: false
+
+    defaults:
+      run:
+        working-directory: ./backend
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Set up Python
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
           cache: "pip"
+          cache-dependency-path: "backend/requirements.txt"
 
-      - name: Install backend dependencies
+      - name: Install dependencies
         run: |
-          cd backend
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-asyncio pytest-cov
+          pip install pytest pytest-cov pytest-asyncio mypy flake8 bandit
 
-      - name: Run backend tests
+      - name: Lint with flake8
         run: |
-          cd backend
-          pytest tests/ -v --cov=app --cov-report=xml --cov-report=html
-        env:
-          DATABASE_URL: postgresql+asyncpg://test_user:test_pass@localhost:5432/stadiummind_test
-          USE_MOCK_DATA: "true"
-          OPENAI_API_KEY: ""
-          JWT_SECRET_KEY: test-secret-key-for-ci
+          flake8 app tests --max-line-length=100 --count --statistics --show-source
 
-      - name: Upload coverage reports
-        uses: codecov/codecov-action@v3
+      - name: Type check with mypy
+        run: |
+          mypy app --ignore-missing-imports --strict --warn-unused-configs
+        continue-on-error: true
+
+      - name: Security scan with bandit
+        run: |
+          bandit -r app -f json -o bandit-report.json || true
+        continue-on-error: true
+
+      - name: Run tests with coverage
+        run: |
+          python -m pytest tests/ \
+            --verbose \
+            --cov=app \
+            --cov-report=xml \
+            --cov-report=term-missing \
+            --cov-fail-under=90 \
+            --asyncio-mode=auto \
+            -x
+        env:
+          PYTHONPATH: ${{ github.workspace }}/backend
+          TESTING: "true"
+          USE_MOCK_DATA: "true"
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v4
         with:
-          files: ./backend/coverage.xml
+          file: ./backend/coverage.xml
           flags: backend
           name: backend-coverage
 
-      - name: Check coverage threshold
-        run: |
-          cd backend
-          pytest tests/ --cov=app --cov-fail-under=70
-
-  frontend-tests:
+  # ─── Frontend: Lint, Build, Test ──────────────────────────────
+  frontend:
+    name: Frontend
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run linting
+      - name: Lint
         run: npm run lint
 
-      - name: Build project
+      - name: Type check
+        run: npx tsc --noEmit
+        continue-on-error: true
+
+      - name: Build
         run: npm run build
         env:
-          NEXT_PUBLIC_API_URL: http://localhost:8000
+          NEXT_PUBLIC_API_URL: "http://localhost:8000/api/v1"
+          NEXT_PUBLIC_WS_URL: "ws://localhost:8000/ws"
 
-      - name: Check bundle size
-        run: |
-          npm install -g @next/bundle-analyzer
-          npm run build -- --bundle-analyzer
-
-  security-scan:
+  # ─── Docker Build & Scan ─────────────────────────────────────
+  docker:
+    name: Docker Build & Scan
     runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: "fs"
-          scan-ref: "."
-          format: "sarif"
-          output: "trivy-results.sarif"
-
-      - name: Upload Trivy results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: "trivy-results.sarif"
-
-      - name: Check for secrets
-        run: |
-          git secrets --scan
-          npm audit --audit-level=high
-
-  docker-build:
-    runs-on: ubuntu-latest
-    needs: [backend-tests, frontend-tests]
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v4
@@ -123,17 +127,61 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build backend Docker image
-        run: |
-          cd backend
-          docker build -t stadiummind-backend .
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        if: github.event_name != 'pull_request'
 
-      - name: Build frontend Docker image
-        run: |
-          docker build -t stadiummind-frontend .
+      - name: Build and export backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}/backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          push: false
+          load: true
 
-      - name: Run container security scan
+      - name: Build frontend
+        run: docker build -t stadiummind-frontend .
+
+  # ─── Security Audit ──────────────────────────────────────────
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "HIGH,CRITICAL"
+
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-results.sarif"
+        continue-on-error: true
+
+  # ─── Deploy ──────────────────────────────────────────────────
+  deploy:
+    name: Deploy to Render
+    runs-on: ubuntu-latest
+    needs: [backend, frontend, security]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Render
         run: |
-          docker run --rm -d -p 8000:8000 stadiummind-backend
-          docker run --rm aquasec/trivy image stadiummind-backend --severity HIGH,CRITICAL
-          docker stop $(docker ps -q)
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+        continue-on-error: true

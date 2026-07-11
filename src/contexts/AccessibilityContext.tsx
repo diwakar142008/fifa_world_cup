@@ -1,64 +1,189 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  type ReactNode,
+} from "react";
 
-interface AccessibilitySettings {
-  highContrast: boolean;
-  largeFont: boolean;
-  reducedMotion: boolean;
+// ─── Types ────────────────────────────────────────────────────
+
+type FontSize = "normal" | "large" | "x-large";
+type Contrast = "normal" | "high";
+type ReducedMotion = "auto" | "reduced";
+
+interface AccessibilityState {
+  fontSize: FontSize;
+  highContrast: Contrast;
+  reducedMotion: ReducedMotion;
   screenReaderMode: boolean;
-  fontScale: number;
+  keyboardMode: boolean;
+  dyslexiaFriendly: boolean;
 }
 
-interface AccessibilityContextType {
-  settings: AccessibilitySettings;
+interface AccessibilityContextType extends AccessibilityState {
+  setFontSize: (size: FontSize) => void;
   toggleHighContrast: () => void;
-  toggleLargeFont: () => void;
   toggleReducedMotion: () => void;
   toggleScreenReaderMode: () => void;
-  setFontScale: (scale: number) => void;
+  toggleDyslexiaFriendly: () => void;
+  resetAccessibility: () => void;
 }
 
-const defaultSettings: AccessibilitySettings = {
-  highContrast: false,
-  largeFont: false,
-  reducedMotion: false,
-  screenReaderMode: false,
-  fontScale: 1,
-};
+// ─── Context ──────────────────────────────────────────────────
 
-const AccessibilityContext = createContext<AccessibilityContextType | null>(null);
+const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
+
+const STORAGE_KEY = "stadiummind-a11y";
+
+function loadSettings(): AccessibilityState {
+  if (typeof window === "undefined") {
+    return {
+      fontSize: "normal",
+      highContrast: "normal",
+      reducedMotion: "auto",
+      screenReaderMode: false,
+      keyboardMode: false,
+      dyslexiaFriendly: false,
+    };
+  }
+
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      return { ...getDefaultState(), ...JSON.parse(stored) };
+    }
+  } catch {
+    // Ignore parse errors
+  }
+
+  // Check system preferences
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const prefersHighContrast = window.matchMedia("(prefers-contrast: high)").matches;
+
+  return {
+    ...getDefaultState(),
+    reducedMotion: prefersReducedMotion ? "reduced" : "auto",
+    highContrast: prefersHighContrast ? "high" : "normal",
+  };
+}
+
+function getDefaultState(): AccessibilityState {
+  return {
+    fontSize: "normal",
+    highContrast: "normal",
+    reducedMotion: "auto",
+    screenReaderMode: false,
+    keyboardMode: false,
+    dyslexiaFriendly: false,
+  };
+}
+
+// ─── Provider ─────────────────────────────────────────────────
 
 export function AccessibilityProvider({ children }: { children: ReactNode }) {
-  const [settings, setSettings] = useState<AccessibilitySettings>(defaultSettings);
+  const [state, setState] = useState<AccessibilityState>(loadSettings);
 
+  // Persist settings to localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("stadiummind-accessibility");
-    if (saved) {
-      try { setSettings(JSON.parse(saved)); } catch { /* ignore */ }
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch {
+      // Ignore storage errors
     }
+  }, [state]);
+
+  // Apply CSS classes to document
+  useEffect(() => {
+    const root = document.documentElement;
+
+    // Font size
+    root.classList.remove("text-normal", "text-large", "text-x-large");
+    root.classList.add(`text-${state.fontSize}`);
+
+    // High contrast
+    root.classList.toggle("high-contrast", state.highContrast === "high");
+
+    // Reduced motion
+    root.classList.toggle("reduce-motion", state.reducedMotion === "reduced");
+
+    // Dyslexia friendly
+    root.classList.toggle("dyslexia-friendly", state.dyslexiaFriendly);
+
+    // Screen reader mode
+    if (state.screenReaderMode) {
+      root.setAttribute("aria-live", "polite");
+    } else {
+      root.removeAttribute("aria-live");
+    }
+  }, [state]);
+
+  // Track keyboard usage
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Tab") {
+        setState((prev) => ({ ...prev, keyboardMode: true }));
+        document.documentElement.classList.add("keyboard-mode");
+      }
+    };
+
+    const handleMouseDown = () => {
+      setState((prev) => ({ ...prev, keyboardMode: false }));
+      document.documentElement.classList.remove("keyboard-mode");
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("mousedown", handleMouseDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousedown", handleMouseDown);
+    };
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("stadiummind-accessibility", JSON.stringify(settings));
-    const root = document.documentElement;
-    if (settings.highContrast) root.classList.add("high-contrast");
-    else root.classList.remove("high-contrast");
-    const scale = settings.largeFont ? 1.25 : settings.fontScale;
-    root.style.fontSize = `${scale * 16}px`;
-    if (settings.reducedMotion) root.classList.add("prefers-reduced-motion");
-    else root.classList.remove("prefers-reduced-motion");
-  }, [settings]);
+  const setFontSize = useCallback((fontSize: FontSize) => {
+    setState((prev) => ({ ...prev, fontSize }));
+  }, []);
+
+  const toggleHighContrast = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      highContrast: prev.highContrast === "high" ? "normal" : "high",
+    }));
+  }, []);
+
+  const toggleReducedMotion = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      reducedMotion: prev.reducedMotion === "reduced" ? "auto" : "reduced",
+    }));
+  }, []);
+
+  const toggleScreenReaderMode = useCallback(() => {
+    setState((prev) => ({ ...prev, screenReaderMode: !prev.screenReaderMode }));
+  }, []);
+
+  const toggleDyslexiaFriendly = useCallback(() => {
+    setState((prev) => ({ ...prev, dyslexiaFriendly: !prev.dyslexiaFriendly }));
+  }, []);
+
+  const resetAccessibility = useCallback(() => {
+    setState(getDefaultState());
+  }, []);
 
   return (
     <AccessibilityContext.Provider
       value={{
-        settings,
-        toggleHighContrast: () => setSettings((s) => ({ ...s, highContrast: !s.highContrast })),
-        toggleLargeFont: () => setSettings((s) => ({ ...s, largeFont: !s.largeFont })),
-        toggleReducedMotion: () => setSettings((s) => ({ ...s, reducedMotion: !s.reducedMotion })),
-        toggleScreenReaderMode: () => setSettings((s) => ({ ...s, screenReaderMode: !s.screenReaderMode })),
-        setFontScale: (scale: number) => setSettings((s) => ({ ...s, fontScale: scale })),
+        ...state,
+        setFontSize,
+        toggleHighContrast,
+        toggleReducedMotion,
+        toggleScreenReaderMode,
+        toggleDyslexiaFriendly,
+        resetAccessibility,
       }}
     >
       {children}
@@ -66,8 +191,12 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAccessibility() {
-  const ctx = useContext(AccessibilityContext);
-  if (!ctx) throw new Error("useAccessibility must be used within AccessibilityProvider");
-  return ctx;
+// ─── Hook ─────────────────────────────────────────────────────
+
+export function useAccessibility(): AccessibilityContextType {
+  const context = useContext(AccessibilityContext);
+  if (!context) {
+    throw new Error("useAccessibility must be used within an AccessibilityProvider");
+  }
+  return context;
 }
