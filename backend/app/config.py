@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     APP_VERSION: str = "1.0.0"
     API_PREFIX: str = "/api/v1"
     DEBUG: bool = True
+    TESTING: bool = False
 
     # ─── Server ────────────────────────────────────────────────
     HOST: str = "0.0.0.0"
@@ -31,10 +32,15 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379/0"
 
     # ─── Authentication ────────────────────────────────────────
-    JWT_SECRET_KEY: str = "change-me-in-production"
+    JWT_SECRET_KEY: str = "change-me-in-production"  # Override in production
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRATION_MINUTES: int = 60
+    JWT_REFRESH_EXPIRATION_MINUTES: int = 10080  # 7 days
     OAUTH2_JWKS_URL: str | None = None
+    
+    # ─── Security ─────────────────────────────────────────────
+    CSRF_SECRET_KEY: str | None = None
+    SESSION_TIMEOUT_MINUTES: int = 60
 
     # ─── AI Services ───────────────────────────────────────────
     OPENAI_API_KEY: str | None = None

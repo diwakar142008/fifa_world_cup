@@ -3,26 +3,30 @@
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.schemas.base import APIResponse, LoginRequest, TokenResponse
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import bcrypt
 from jose import jwt, JWTError
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 from app.config import get_settings
+from app.middleware.token_blacklist import TokenBlacklist
 
 settings = get_settings()
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 security = HTTPBearer(auto_error=False)
 
 # In-memory user store (replace with database in production)
+# Demo accounts for development - override in production with real user database
 USERS = {
     "admin@stadiummind.ai": {
-        "password": bcrypt.hashpw("demo1234".encode(), bcrypt.gensalt()).decode(),
+        "password": bcrypt.hashpw("changeme-in-prod!".encode(), bcrypt.gensalt()).decode(),
         "user_id": "user-001",
         "name": "Alex Morgan",
         "role": "organizer",
     },
     "fan@stadiummind.ai": {
-        "password": bcrypt.hashpw("demo1234".encode(), bcrypt.gensalt()).decode(),
+        "password": bcrypt.hashpw("changeme-in-prod!".encode(), bcrypt.gensalt()).decode(),
         "user_id": "user-002",
         "name": "Fan User",
         "role": "fan",
@@ -32,12 +36,12 @@ USERS = {
 
 def create_access_token(user_id: str, role: str) -> str:
     """Create a real JWT token."""
-    expires = datetime.utcnow() + timedelta(minutes=settings.JWT_EXPIRATION_MINUTES)
+    expires = datetime.now(timezone.utc) + timedelta(minutes=settings.JWT_EXPIRATION_MINUTES)
     payload = {
         "sub": user_id,
         "role": role,
         "exp": expires,
-        "iat": datetime.utcnow(),
+        "iat": datetime.now(timezone.utc),
     }
     return jwt.encode(payload, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
 
@@ -83,6 +87,8 @@ async def login(request: LoginRequest):
 @router.post("/logout")
 async def logout(current_user: dict = Depends(get_current_user)):
     """Invalidate the current session."""
+    # Token will be blacklisted by the client
+    TokenBlacklist.revoke_session(current_user["sub"])
     return APIResponse(data={"message": "Logged out successfully"})
 
 

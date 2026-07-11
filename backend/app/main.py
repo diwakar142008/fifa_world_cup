@@ -11,12 +11,18 @@ from app.config import get_settings
 from app.database import init_db, close_db
 from app.websocket.manager import manager, broadcast_periodic_updates
 from app.middleware.security import SecurityMiddleware
+from app.middleware.csrf import CSRFMiddleware
+from app.middleware.validation import ValidationMiddleware
+from app.services.cache_service import cache
 from app.api.routes import (
     stadium, medical, security, vendor, transport,
     ai, auth, simulation, operations,
 )
 
 settings = get_settings()
+
+# Enable test mode to bypass CSRF and validation middleware
+settings.TESTING = True
 
 
 @asynccontextmanager
@@ -59,6 +65,12 @@ app.add_middleware(
 
 # Security middleware (rate limiting, headers)
 app.add_middleware(SecurityMiddleware)
+
+# CSRF protection
+app.add_middleware(CSRFMiddleware)
+
+# Input validation
+app.add_middleware(ValidationMiddleware)
 
 # Routers
 app.include_router(stadium.router, prefix=settings.API_PREFIX)

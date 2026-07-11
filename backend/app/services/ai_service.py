@@ -68,21 +68,60 @@ class AIService:
             return {"headline": "Status update", "narrative": "Operations normal", "risk_level": "low", "confidence_score": 0.9, "key_insights": [], "top_recommendations": []}
 
     async def generate_predictions(self, data: dict) -> dict:
+        attendance = data.get('current_attendance', 0)
+        occupancy = data.get('occupancy_pct', 0)
+        
         if not aclient:
-            return {"predictions": [], "recommended_actions": []}
+            risk_zones = []
+            if occupancy > 85:
+                risk_zones.append({
+                    "zone": "Main Concourse",
+                    "congestion_probability": 0.82,
+                    "predicted_crowd_density": min(100, occupancy + 10),
+                    "peak_time": "15 minutes",
+                    "reasoning": "High occupancy trend indicates concourse congestion"
+                })
+            
+            return {
+                "predictions": risk_zones,
+                "recommended_actions": [
+                    "Deploy additional staff to high-traffic areas" if occupancy > 75 else "Monitor normal operations",
+                    "Prepare contingency gates" if occupancy > 85 else "Standard gate management"
+                ],
+                "confidence_score": 0.7,
+                "time_window": "next_15_minutes"
+            }
+        
         try:
             resp = await aclient.chat.completions.create(
                 model=settings.OPENAI_MODEL,
                 messages=[
-                    {"role": "system", "content": "Predict stadium congestion points for next 15 minutes."},
-                    {"role": "user", "content": f"Attendance: {data.get('current_attendance', 0)}"},
+                    {"role": "system", "content": "Predict congestion zones with structured output: predictions (list with zone, congestion_probability, predicted_crowd_density, peak_time, reasoning), recommended_actions (list), confidence_score, time_window."},
+                    {"role": "user", "content": f"Attendance: {attendance}, Occupancy: {occupancy}%, Gates: {data.get('open_gates', 3)}/{data.get('total_gates', 6)}"},
                 ],
                 temperature=0.5,
-                max_tokens=200,
+                max_tokens=350,
+                response_format={"type": "json_object"}
             )
-            return {"predictions": [{"zone": "General", "prediction": resp.choices[0].message.content, "confidence": 0.8}], "recommended_actions": []}
+            import json
+            text = resp.choices[0].message.content or "{}"
+            try:
+                result = json.loads(text)
+                result.setdefault("confidence_score", 0.8)
+                result.setdefault("time_window", "next_15_minutes")
+                return result
+            except json.JSONDecodeError:
+                return {
+                    "predictions": [{"zone": "General", "prediction": text, "confidence": 0.75}],
+                    "recommended_actions": [],
+                    "confidence_score": 0.75
+                }
         except Exception:
-            return {"predictions": [], "recommended_actions": []}
+            return {
+                "predictions": [],
+                "recommended_actions": ["Monitor crowd patterns"],
+                "confidence_score": 0.6
+            }
 
     def _save_message(self, session_id: str, role: str, content: str) -> None:
         if session_id not in self.conversation_memory:

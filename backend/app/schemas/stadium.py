@@ -95,6 +95,8 @@ class AIMessage(BaseModel):
 
 class AIChatRequest(BaseModel):
     messages: list[AIMessage]
+    session_id: Optional[str] = None
+    role: Optional[str] = "user"
     context: Optional[dict] = None
 
 
