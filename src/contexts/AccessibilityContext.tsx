@@ -24,8 +24,16 @@ interface AccessibilityState {
   dyslexiaFriendly: boolean;
 }
 
+interface AccessibilitySettings {
+  fontSize: FontSize;
+  highContrast: Contrast;
+  reducedMotion: ReducedMotion;
+}
+
 interface AccessibilityContextType extends AccessibilityState {
+  settings: AccessibilitySettings;
   setFontSize: (size: FontSize) => void;
+  toggleLargeFont: () => void;
   toggleHighContrast: () => void;
   toggleReducedMotion: () => void;
   toggleScreenReaderMode: () => void;
@@ -148,6 +156,13 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, fontSize }));
   }, []);
 
+  const toggleLargeFont = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      fontSize: prev.fontSize === "normal" ? "large" : "normal",
+    }));
+  }, []);
+
   const toggleHighContrast = useCallback(() => {
     setState((prev) => ({
       ...prev,
@@ -174,11 +189,19 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
     setState(getDefaultState());
   }, []);
 
+  const settings: AccessibilitySettings = {
+    fontSize: state.fontSize,
+    highContrast: state.highContrast,
+    reducedMotion: state.reducedMotion,
+  };
+
   return (
     <AccessibilityContext.Provider
       value={{
         ...state,
+        settings,
         setFontSize,
+        toggleLargeFont,
         toggleHighContrast,
         toggleReducedMotion,
         toggleScreenReaderMode,

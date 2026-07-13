@@ -2,11 +2,72 @@
 // Centralized API client for all backend communication.
 // Handles auth, token refresh, error handling, and typed responses.
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/v1";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/v1";
 
 interface FetchOptions extends RequestInit {
   headers?: Record<string, string>;
+}
+
+interface ApiData<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
+interface DashboardData {
+  headline: string;
+  narrative: string;
+  risk_level: string;
+  predictions: Array<{ zone: string; prediction: string; confidence: number }>;
+  incidents: Array<{ id: string; title: string; priority: string }>;
+  crowd_summary: { total_attendance: number; occupancy_pct: number };
+}
+
+interface StadiumData {
+  id: string;
+  name: string;
+  current_attendance: number;
+  total_capacity: number;
+  occupancy_pct: number;
+  zones: Array<{
+    id: string;
+    name: string;
+    zone_type: string;
+    current_count: number;
+    capacity: number;
+    crowd_level: number;
+    status: string;
+  }>;
+}
+
+interface SimulationResult {
+  id: string;
+  scenario: string;
+  summary: string;
+  risk_level: string;
+  confidence_score: number;
+  impacts: {
+    queue_times: Array<{
+      metric: string;
+      before: number | string;
+      after: number | string;
+      impact: string;
+    }>;
+    walking_times: Array<{
+      metric: string;
+      before: number | string;
+      after: number | string;
+      impact: string;
+    }>;
+    safety: Array<{
+      metric: string;
+      before: number | string;
+      after: number | string;
+      impact: string;
+    }>;
+  };
+  recommended_actions: string[];
+  alternatives: string[];
 }
 
 class ApiError extends Error {
@@ -39,10 +100,7 @@ class ApiClient {
     return this.token;
   }
 
-  private async request<T>(
-    path: string,
-    options: FetchOptions = {},
-  ): Promise<T> {
+  private async request<T>(path: string, options: FetchOptions = {}): Promise<T> {
     const url = `${API_BASE}${path}`;
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
@@ -53,9 +111,7 @@ class ApiClient {
     }
     const response = await fetch(url, { ...options, headers });
     if (!response.ok) {
-      const error = await response
-        .json()
-        .catch(() => ({ detail: "Unknown error" }));
+      const error = await response.json().catch(() => ({ detail: "Unknown error" }));
       throw new ApiError(error.detail || "API Error", response.status);
     }
     return response.json();
@@ -87,10 +143,7 @@ class ApiClient {
     }>("/auth/me");
   }
 
-  async aiChat(
-    messages: { role: string; content: string }[],
-    sessionId?: string,
-  ) {
+  async aiChat(messages: { role: string; content: string }[], sessionId?: string) {
     return this.request<{
       data: { response: string; confidence: number; risk_level: string };
     }>("/ai/chat", {
@@ -123,15 +176,15 @@ class ApiClient {
   }
 
   async getOperationsDashboard() {
-    return this.request<{ data: any }>("/operations/dashboard");
+    return this.request<ApiData<DashboardData>>("/operations/dashboard");
   }
 
   async getStadiumData() {
-    return this.request<{ data: any }>("/stadium");
+    return this.request<ApiData<StadiumData>>("/stadium");
   }
 
   async runSimulation(query: string, scenarioType?: string) {
-    return this.request<{ data: any }>("/simulation/run", {
+    return this.request<ApiData<SimulationResult>>("/simulation/run", {
       method: "POST",
       body: JSON.stringify({ query, scenario_type: scenarioType }),
     });
