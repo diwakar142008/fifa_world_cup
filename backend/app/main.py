@@ -115,6 +115,7 @@ logger.info(f"Registered {len(app.routes)} API routes")
 @app.get("/health", tags=["System"])
 async def health_check():
     """Comprehensive health check returning status of all services."""
+    cache_status = "online" if cache._connected else "offline"
     return {
         "status": "healthy",
         "version": settings.APP_VERSION,
@@ -123,7 +124,7 @@ async def health_check():
             "api": "online",
             "ai": "online" if settings.OPENAI_API_KEY else "degraded",
             "database": "mock" if settings.USE_MOCK_DATA else "online",
-            "cache": "online" if cache else "offline",
+            "cache": cache_status,
         },
         "environment": "production" if not settings.DEBUG else "development",
     }
@@ -145,8 +146,7 @@ async def root():
 @app.get("/health/readiness", tags=["System"])
 async def readiness_check():
     """Readiness probe for orchestrators (Kubernetes/Docker)."""
-    db_ready = settings.USE_MOCK_DATA or True
-    return {"ready": db_ready, "database": db_ready}
+    return {"ready": True, "database": "mock" if settings.USE_MOCK_DATA else "online"}
 
 
 @app.get("/health/liveness", tags=["System"])
@@ -157,11 +157,11 @@ async def liveness_check():
 
 # WebSocket Endpoints
 
-@app.websocket("/ws", tags=["WebSocket"])
+@app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     """WebSocket endpoint for real-time stadium data streaming."""
     await manager.connect(websocket)
-    client_ip = websocket.client.host
+    client_ip = websocket.client.host if websocket.client else "unknown"
     logger.info(f"WebSocket client connected from {client_ip}")
     try:
         while True:
@@ -179,7 +179,7 @@ async def websocket_endpoint(websocket: WebSocket):
         manager.disconnect(websocket)
 
 
-@app.websocket("/ws/{room}", tags=["WebSocket"])
+@app.websocket("/ws/{room}")
 async def websocket_room_endpoint(websocket: WebSocket, room: str):
     """WebSocket endpoint with room/channel support for targeted broadcasts."""
     await manager.connect(websocket, room)

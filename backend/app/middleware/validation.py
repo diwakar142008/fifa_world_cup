@@ -1,61 +1,50 @@
-"""Input Validation and Sanitization Middleware."""
+"""Input Validation and Sanitization Middleware.
 
-from fastapi import Request, HTTPException
-from fastapi.responses import JSONResponse
+Uses Pydantic schema validation in route handlers for detailed validation.
+This middleware provides additional injection pattern detection for query params.
+"""
+
+from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 import re
-import html
 from app.config import get_settings
+
 
 settings = get_settings()
 
 
-def _is_testing() -> bool:
-    try:
-        return get_settings().TESTING
-    except Exception:
-        return False
-
-
 class ValidationMiddleware(BaseHTTPMiddleware):
-    """Validates and sanitizes input to prevent injection attacks."""
+    """Additional input sanitization for query parameters and headers.
+
+    Note: Body validation is handled by Pydantic schemas in route handlers.
+    """
 
     # Patterns for common attacks
     SQL_INJECTION_PATTERNS = [
-        r"(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|EXEC|ALTER|CREATE|TRUNCATE)\b)",
-        r"(--|\#|\/\*|\*\/)",
-        r"('|\"|;|\\x00|\\n|\\r|\\x1a)",
+        r"\b(SELECT\s.+FROM|INSERT\s+INTO|UPDATE\s.+SET|DELETE\s+FROM|DROP\s+TABLE|UNION\s+SELECT|EXEC\s|ALTER\s+TABLE|CREATE\s+TABLE|TRUNCATE\s+TABLE)\b",
     ]
 
     XSS_PATTERNS = [
         r"<script[^>]*>",
         r"javascript:",
-        r"onerror\s*=",
-        r"onclick\s*=",
-        r"<iframe",
-        r"<embed",
-        r"<object",
     ]
 
     async def dispatch(self, request: Request, call_next):
         # Skip validation in testing mode
-        if _is_testing():
-            return await call_next(request)
+        try:
+            if get_settings().TESTING:
+                return await call_next(request)
+        except Exception:
+            pass
 
-        # Skip validation for safe methods
-        if request.method in ["GET", "HEAD", "OPTIONS"]:
-            return await call_next(request)
-
-        # Validate request body for JSON content
-        if request.headers.get("content-type", "").startswith("application/json"):
-            body = await request.body()
-            if body:
-                body_str = body.decode('utf-8', errors='ignore')
-                if self._detect_sql_injection(body_str) or self._detect_xss(body_str):
-                    return JSONResponse(
-                        status_code=400,
-                        content={"detail": "Invalid input detected"}
-                    )
+        # Validate query params for injection patterns
+        for key, value in request.query_params.items():
+            if self._detect_sql_injection(value) or self._detect_xss(value):
+                from fastapi.responses import JSONResponse
+                return JSONResponse(
+                    status_code=400,
+                    content={"detail": "Invalid input detected"}
+                )
 
         return await call_next(request)
 

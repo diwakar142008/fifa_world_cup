@@ -94,5 +94,6 @@ class AuditLogger:
         )
 
 
-# Global audit logger instance
-audit = AuditLogger()
+# Global audit logger instance (named 'audit_logger' for import consistency)
+audit_logger = AuditLogger()
+audit = audit_logger  # Backward compatibility alias

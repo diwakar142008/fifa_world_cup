@@ -32,17 +32,21 @@ class CSRFMiddleware(BaseHTTPMiddleware):
         if _is_testing():
             return await call_next(request)
 
-        # Skip CSRF for safe methods and auth endpoints
+        # Skip CSRF for safe methods
         if request.method in ["GET", "HEAD", "OPTIONS"]:
             return await call_next(request)
 
         path = request.url.path
         
-        # Skip CSRF for API auth endpoints (they use JWT)
-        if path.startswith("/api/v1/auth"):
+        # Skip CSRF for all API endpoints (they use JWT/bearer token auth)
+        if path.startswith("/api/"):
             return await call_next(request)
 
-        # Check CSRF token for state-changing requests
+        # Skip CSRF for health endpoints
+        if path.startswith("/health"):
+            return await call_next(request)
+
+        # Check CSRF token for state-changing requests (browser forms only)
         csrf_token = request.headers.get("X-CSRF-Token")
         if not csrf_token or not self._validate_token(csrf_token):
             return JSONResponse(

@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   async rewrites() {
     return [
       {
@@ -21,12 +22,7 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 3600,
   },
   experimental: {
-    optimizePackageImports: [
-      "lucide-react",
-      "framer-motion",
-      "recharts",
-      "leaflet",
-    ],
+    optimizePackageImports: ["lucide-react", "framer-motion", "recharts", "leaflet"],
   },
 };
 

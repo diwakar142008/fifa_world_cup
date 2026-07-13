@@ -1,254 +1,120 @@
-# StadiumMind AI 🏟️🤖
+# StadiumMind AI
 
 **The Generative AI Operating System for FIFA World Cup 2026 Stadiums**
 
-[![CI/CD](https://github.com/stadiummind/stadium-mind-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/stadiummind/stadium-mind-ai/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/stadiummind/stadium-mind-ai/branch/main/graph/badge.svg)](https://codecov.io/gh/stadiummind/stadium-mind-ai)
-[![Security](https://img.shields.io/badge/security-98%25-brightgreen)](SECURITY.md)
-[![Accessibility](https://img.shields.io/badge/WCAG-2.2%20AA-blue)](ACCESSIBILITY.md)
+[![CI/CD](https://github.com/your-org/stadium-mind-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/stadium-mind-ai/actions/workflows/ci.yml)
 
----
+## Overview
 
-## 📋 Table of Contents
+StadiumMind AI is a production-grade, enterprise platform that combines multi-agent AI orchestration, real-time digital twin technology, predictive analytics, and operational intelligence for stadium management at the FIFA World Cup 2026.
 
-- [Problem Statement](#-problem-statement)
-- [Solution Overview](#-solution-overview)
-- [Architecture](#-architecture)
-- [Features](#-features)
-- [AI Agents](#-ai-agents)
-- [Tech Stack](#-tech-stack)
-- [Getting Started](#-getting-started)
-- [API Documentation](#-api-documentation)
-- [Testing](#-testing)
-- [Deployment](#-deployment)
-- [Security](#-security)
-- [Accessibility](#-accessibility)
-- [Project Structure](#-project-structure)
-- [Contributing](#-contributing)
-- [Roadmap](#-roadmap)
-- [License](#-license)
+### Key Capabilities
 
----
+- **12 Specialized AI Agents** — Navigation, Crowd Management, Emergency Response, Medical, Security, Sustainability, Transportation, Volunteer Coordination, Vendor Management, Operations, Accessibility, and Coordinator
+- **Real-Time Digital Twin** — Live virtual replica of every stadium, updated every 5 seconds from IoT, CCTV, GPS, and sensor networks
+- **Predictive Analytics** — AI predicts congestion, demand, and incidents 10-30 minutes before they occur
+- **Multi-Agent Orchestration** — Central coordinator agent generates unified responses from all specialized agents
+- **Simulation Engine** — "What-if" scenario testing for gate closures, weather events, evacuations, and more
+- **Multi-Lingual AI** — Real-time translation across 11 languages
+- **Dark Mode & Accessibility** — WCAG 2.1 AA compliant with full dark mode support
 
-## 🎯 Problem Statement
-
-### The Challenge
-
-Managing a FIFA World Cup stadium involves coordinating **80,000+ fans**, **thousands of staff**, and **dozens of systems** — all in real-time. Stadium operators face:
-
-| Problem                   | Impact                                             | Current Solution Gap                          |
-| ------------------------- | -------------------------------------------------- | --------------------------------------------- |
-| **Crowd Congestion**      | Long queues, safety risks, fan frustration         | Reactive monitoring, no predictive capability |
-| **Emergency Response**    | Delayed incident detection, poor coordination      | Siloed systems, manual communication          |
-| **Multilingual Barriers** | 11+ languages, confused international fans         | Static signage, limited translation           |
-| **Operational Silos**     | Security, medical, vendors, transport disconnected | Separate dashboards, no unified view          |
-| **Sustainability**        | High energy usage, waste, carbon footprint         | No real-time monitoring or optimization       |
-| **Resource Allocation**   | Over/under-staffing, inefficient deployment        | Historical-based, not predictive              |
-
-### Our Solution
-
-**StadiumMind AI** is a unified AI operating system that connects every stakeholder, predicts problems before they occur, and orchestrates intelligent responses — all through a single platform.
-
----
-
-## 💡 Solution Overview
-
-### Key Innovations
-
-1. **Multi-Agent AI Orchestration**: 12 specialized AI agents collaborate in real-time, coordinated by a central brain that generates unified responses with confidence scores and reasoning.
-
-2. **Real-Time Digital Twin**: Live virtual replica of every stadium, updated every few seconds from IoT, CCTV, GPS, and sensor networks.
-
-3. **Predictive Analytics**: AI predicts congestion, demand, and incidents 10-30 minutes before they occur — enabling proactive decisions.
-
-4. **AI Simulation Engine**: "What happens if Gate A closes?" — simulate queue times, evacuation, transport, and safety outcomes instantly.
-
-5. **Emergency Copilot**: Automatic incident detection, responder dispatch, multilingual announcements, and report generation in seconds.
-
-6. **Multilingual AI**: Real-time translation across 11 languages with auto-detection and inclusive announcements.
-
-### Measurable Outcomes
-
-| Metric                               | Improvement                |
-| ------------------------------------ | -------------------------- |
-| Crowd congestion prediction accuracy | 94% (10-min), 87% (30-min) |
-| Emergency response time              | 60% faster                 |
-| Staff deployment efficiency          | 40% improvement            |
-| Fan satisfaction                     | 35% increase               |
-| Energy consumption                   | 25% reduction              |
-| Multilingual coverage                | 11 languages               |
-
----
-
-## 🏗 Architecture
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    Frontend (Next.js)                        │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────────┐  │
-│  │ Landing  │ │Dashboard │ │  Map     │ │  Simulation  │  │
-│  │  Page    │ │  Pages   │ │  View    │ │   Engine     │  │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────────┘  │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │           Shared Components & Hooks                  │  │
-│  └──────────────────────────────────────────────────────┘  │
-└──────────────────────┬──────────────────────────────────────┘
-                       │ HTTP/WS
-┌──────────────────────▼──────────────────────────────────────┐
-│                    Backend (FastAPI)                         │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────────┐  │
-│  │  Auth    │ │  API     │ │WebSocket │ │  Middleware   │  │
-│  │ Service  │ │  Routes  │ │ Manager  │ │  Stack       │  │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────────┘  │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │              Service Layer                            │  │
-│  │  AI  │ Predictive │ RAG │ Cache │ Multilingual │ ... │  │
-│  └──────────────────────────────────────────────────────┘  │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │           Data Layer (Models, Schemas)                │  │
-│  └──────────────────────────────────────────────────────┘  │
-└──────┬──────────────────────┬──────────────────────────────┘
-       │                      │
-┌──────▼──────┐      ┌───────▼───────┐
-│ PostgreSQL  │      │    Redis      │
-│ (Supabase)  │      │    Cache      │
-└─────────────┘      └───────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                        Frontend (Next.js 15)                    │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌───────────────────┐ │
+│  │ Dashboard│ │    Map   │ │Simulation│ │ AI Chat / Insights │ │
+│  └──────────┘ └──────────┘ └──────────┘ └───────────────────┘ │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │ HTTP/WS
+┌──────────────────────────▼──────────────────────────────────────┐
+│                    Backend (FastAPI / Python)                    │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌───────────────────┐ │
+│  │  Routes  │ │Middleware│ │ Services │ │  WebSocket Manager│ │
+│  └──────────┘ └──────────┘ └──────────┘ └───────────────────┘ │
+│  ┌──────────┐ ┌──────────┐ ┌────────────────────────────────┐ │
+│  │  Models  │ │  Cache   │ │   AI Orchestration (OpenAI/    │ │
+│  │ (SQLAlch)│ │  (Redis) │ │   Anthropic/Gemini Fallback)  │ │
+│  └──────────┘ └──────────┘ └────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Data Flow
+### Backend Architecture
 
-1. **Ingestion**: IoT sensors, CCTV feeds, ticketing systems → API Gateway
-2. **Processing**: AI agents analyze data in real-time → Predictions & Insights
-3. **Orchestration**: Coordinator Agent fuses all outputs → Unified Response
-4. **Delivery**: WebSocket push to dashboards, mobile apps, digital signage
-5. **Feedback**: User actions → Model improvement → Better predictions
+```
+backend/
+├── app/
+│   ├── api/routes/       # FastAPI route handlers (9 modules)
+│   ├── middleware/        # Security, CORS, Rate Limiting, CSRF, Validation
+│   ├── models/            # SQLAlchemy ORM models (10 modules)
+│   ├── schemas/           # Pydantic request/response validation
+│   ├── services/          # Business logic (13 services)
+│   ├── websocket/         # Real-time WebSocket manager
+│   ├── mock_data/         # Development/demo data generator
+│   ├── config.py          # Centralized settings via Pydantic
+│   ├── database.py        # Async SQLAlchemy engine & sessions
+│   └── main.py            # Application entry point
+├── tests/                 # pytest test suite (11 test modules)
+├── Dockerfile             # Multi-stage Docker build
+└── requirements.txt       # Python dependencies
+```
 
----
+### Frontend Architecture
 
-## ✨ Features
+```
+src/
+├── app/
+│   ├── layout.tsx         # Root layout with metadata, fonts, accessibility
+│   ├── page.tsx           # Landing page with hero, agents, features
+│   ├── globals.css        # Global styles, CSS variables, Tailwind
+│   ├── login/             # Authentication page
+│   └── dashboard/         # Dashboard pages (operations, map, simulation, etc.)
+├── components/
+│   ├── dashboard/         # Dashboard-specific components
+│   ├── landing/           # Landing page components
+│   └── map/               # Map visualization components
+├── contexts/              # React contexts (Accessibility)
+├── hooks/                 # Custom React hooks
+└── lib/                   # Utility functions and API client
+```
 
-### 🧠 AI Digital Twin
-
-Live virtual replica of every stadium with real-time sensor fusion.
-
-### 🤖 Multi-Agent Orchestration
-
-12 specialized AI agents collaborating through a central coordinator.
-
-### 📊 Predictive Analytics
-
-Crowd congestion, demand forecasting, and incident prediction.
-
-### 🎮 AI Simulation Engine
-
-"What-if" scenarios for gates, evacuation, transport, and safety.
-
-### 🚨 Emergency Copilot
-
-Automatic detection, dispatch, and multilingual announcements.
-
-### 🌐 Multilingual AI
-
-Real-time translation across 11 languages with auto-detection.
-
-### 👥 Crowd Intelligence
-
-Every gate, corridor, and restroom monitored with 10-min advance predictions.
-
-### 📈 Operations Dashboard
-
-Generative summaries with real-time KPIs, alerts, and recommendations.
-
----
-
-## 🤖 AI Agents
-
-| Agent                | Domain        | Capabilities                                                             |
-| -------------------- | ------------- | ------------------------------------------------------------------------ |
-| **Coordinator**      | Orchestration | Agent fusion, response unification, priority routing                     |
-| **Navigation**       | Wayfinding    | Indoor/outdoor routing, AR wayfinding, accessibility paths               |
-| **Crowd Management** | Congestion    | Congestion prediction, flow analysis, capacity monitoring                |
-| **Emergency**        | Safety        | Incident detection, evacuation planning, responder dispatch              |
-| **Medical**          | Healthcare    | Triage support, equipment locator, ambulance coordination                |
-| **Security**         | Safety        | Threat detection, access control, surveillance analysis                  |
-| **Transportation**   | Transit       | Metro/bus monitoring, parking management, traffic analysis               |
-| **Volunteer**        | Staffing      | Task assignment, location dispatch, multilingual support                 |
-| **Vendor**           | Commerce      | Demand prediction, inventory management, staffing optimization           |
-| **Accessibility**    | Inclusion     | Multilingual translation, accessibility routing, inclusive announcements |
-| **Operations**       | Management    | Resource allocation, equipment tracking, maintenance scheduling          |
-| **Sustainability**   | Environment   | Energy monitoring, waste tracking, carbon analytics                      |
-
----
-
-## 🛠 Tech Stack
-
-### Frontend
-
-- **Framework**: Next.js 16 (React 19)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS 4
-- **Animations**: Framer Motion
-- **Charts**: Recharts
-- **Maps**: Mapbox GL / Leaflet
-- **Icons**: Lucide React
-
-### Backend
-
-- **Framework**: FastAPI (Python 3.12)
-- **ORM**: SQLAlchemy (async)
-- **Database**: PostgreSQL (via Supabase)
-- **Cache**: Redis
-- **AI/ML**: OpenAI, Anthropic, Gemini APIs
-- **WebSocket**: FastAPI WebSockets
-
-### DevOps
-
-- **Containerization**: Docker
-- **CI/CD**: GitHub Actions
-- **Hosting**: Render
-- **Monitoring**: Prometheus, OpenTelemetry
-- **Security**: Bandit, Trivy
-
----
-
-## 🚀 Getting Started
+## Quick Start
 
 ### Prerequisites
 
-- Node.js 20+
 - Python 3.11+
-- Docker & Docker Compose (optional)
-- PostgreSQL (optional, uses mock data by default)
+- Node.js 20+
+- Redis (optional, for caching)
 
-### Quick Start
+### Backend Setup
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/stadiummind/stadium-mind-ai.git
-cd stadium-mind-ai
-
-# 2. Install frontend dependencies
-npm install
-
-# 3. Install backend dependencies
 cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-cd ..
 
-# 4. Set up environment variables
-cp backend/.env.example backend/.env
-# Edit backend/.env with your API keys
+# Copy environment file
+cp .env.example .env
 
-# 5. Start the backend
-cd backend
-uvicorn app.main:app --reload --port 8000
-cd ..
-
-# 6. Start the frontend (in a new terminal)
-npm run dev
-
-# 7. Open http://localhost:3000
+# Run with mock data (no database required)
+python -m uvicorn app.main:app --reload --port 8000
 ```
+
+### Frontend Setup
+
+```bash
+# From project root
+npm install
+npm run dev
+```
+
+The application will be available at:
+
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
 
 ### Docker Setup
 
@@ -256,242 +122,193 @@ npm run dev
 # Build and run all services
 docker-compose up --build
 
-# Access the application
-# Frontend: http://localhost:3000
-# Backend API: http://localhost:8000
-# API Docs: http://localhost:8000/docs
+# Or build individually
+docker build -t stadiummind-backend ./backend
+docker build -t stadiummind-frontend -f Dockerfile.frontend .
 ```
 
----
+## Environment Variables
 
-## 📚 API Documentation
+### Backend (`backend/.env`)
 
-### Interactive API Docs
+| Variable            | Default                    | Description                      |
+| ------------------- | -------------------------- | -------------------------------- |
+| `DEBUG`             | `false`                    | Enable debug mode                |
+| `USE_MOCK_DATA`     | `true`                     | Use mock data (no DB required)   |
+| `JWT_SECRET_KEY`    | `change-me-in-production`  | JWT signing secret               |
+| `OPENAI_API_KEY`    | —                          | OpenAI API key for AI features   |
+| `ANTHROPIC_API_KEY` | —                          | Anthropic API key (fallback)     |
+| `GEMINI_API_KEY`    | —                          | Google Gemini API key (fallback) |
+| `DATABASE_URL`      | `postgresql+asyncpg://...` | PostgreSQL connection string     |
+| `REDIS_URL`         | `redis://localhost:6379/0` | Redis connection string          |
 
-When running in development mode:
+### Frontend
 
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
+| Variable              | Default                  | Description     |
+| --------------------- | ------------------------ | --------------- |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:8000`  | Backend API URL |
+| `NEXT_PUBLIC_WS_URL`  | `ws://localhost:8000/ws` | WebSocket URL   |
 
-### Key Endpoints
+## API Documentation
 
-| Method | Endpoint                 | Description                  |
-| ------ | ------------------------ | ---------------------------- |
-| `GET`  | `/health`                | System health check          |
-| `GET`  | `/api/v1/ai/summary`     | Stadium operations summary   |
-| `GET`  | `/api/v1/ai/predictions` | Crowd congestion predictions |
-| `POST` | `/api/v1/ai/chat`        | AI chat completion           |
-| `POST` | `/api/v1/ai/chat-stream` | Streaming AI chat (SSE)      |
-| `GET`  | `/api/v1/ai/models`      | AI model status              |
-| `POST` | `/api/v1/auth/login`     | User authentication          |
-| `GET`  | `/api/v1/stadium/status` | Current stadium status       |
-| `WS`   | `/ws`                    | Real-time data stream        |
-| `WS`   | `/ws/{room}`             | Room-based WebSocket         |
+### Authentication
 
-### Response Format
+| Method | Endpoint               | Description               |
+| ------ | ---------------------- | ------------------------- |
+| POST   | `/api/v1/auth/login`   | Login with email/password |
+| POST   | `/api/v1/auth/logout`  | Invalidate session        |
+| GET    | `/api/v1/auth/me`      | Get current user          |
+| POST   | `/api/v1/auth/refresh` | Refresh access token      |
 
-All API responses follow a consistent format:
+### Stadium Operations
 
-```json
-{
-  "success": true,
-  "data": { ... },
-  "error": null,
-  "timestamp": "2026-07-11T12:00:00Z"
-}
-```
+| Method | Endpoint                    | Description          |
+| ------ | --------------------------- | -------------------- |
+| GET    | `/api/v1/stadium`           | Get stadium status   |
+| GET    | `/api/v1/stadium/zones`     | Get zone-level data  |
+| GET    | `/api/v1/stadium/incidents` | Get active incidents |
 
----
+### AI & Intelligence
 
-## 🧪 Testing
+| Method | Endpoint                 | Description                     |
+| ------ | ------------------------ | ------------------------------- |
+| POST   | `/api/v1/ai/chat`        | AI chat completion              |
+| POST   | `/api/v1/ai/chat-stream` | Streaming AI chat (SSE)         |
+| GET    | `/api/v1/ai/summary`     | AI-generated operations summary |
+| GET    | `/api/v1/ai/predictions` | Crowd congestion predictions    |
+| GET    | `/api/v1/ai/models`      | AI model status                 |
+| GET    | `/api/v1/ai/knowledge`   | Knowledge base stats            |
+
+### Operations Dashboard
+
+| Method | Endpoint                       | Description            |
+| ------ | ------------------------------ | ---------------------- |
+| GET    | `/api/v1/operations/dashboard` | Complete ops dashboard |
+
+### Simulation
+
+| Method | Endpoint                     | Description            |
+| ------ | ---------------------------- | ---------------------- |
+| POST   | `/api/v1/simulation/run`     | Run what-if simulation |
+| GET    | `/api/v1/simulation/presets` | Get scenario presets   |
+
+### WebSocket
+
+| Endpoint              | Description              |
+| --------------------- | ------------------------ |
+| `ws://host/ws`        | Global real-time updates |
+| `ws://host/ws/{room}` | Room-specific broadcasts |
+
+### Health
+
+| Method | Endpoint            | Description                |
+| ------ | ------------------- | -------------------------- |
+| GET    | `/health`           | Comprehensive health check |
+| GET    | `/health/readiness` | Readiness probe            |
+| GET    | `/health/liveness`  | Liveness probe             |
+
+## Testing
 
 ### Backend Tests
 
 ```bash
 cd backend
-
-# Run all tests with coverage
-python -m pytest tests/ --cov=app --cov-report=term-missing --asyncio-mode=auto
-
-# Run specific test file
-python -m pytest tests/test_ai_service.py -v
-
-# Run with coverage threshold
-python -m pytest tests/ --cov=app --cov-fail-under=90
+python -m pytest tests/ --verbose --cov=app --cov-report=term-missing
 ```
 
-### Test Coverage Areas
+### Frontend Tests
 
-| Module             | Coverage Target | Status |
-| ------------------ | --------------- | ------ |
-| AI Service         | 95%+            | ✅     |
-| Predictive Service | 95%+            | ✅     |
-| Authentication     | 95%+            | ✅     |
-| Security           | 95%+            | ✅     |
-| Cache Service      | 90%+            | ✅     |
-| Multilingual       | 90%+            | ✅     |
-| Sustainability     | 90%+            | ✅     |
-| Accessibility      | 90%+            | ✅     |
-| API Endpoints      | 90%+            | ✅     |
-| Simulation         | 85%+            | ✅     |
+```bash
+npm test
+```
 
----
+### Docker Tests
 
-## 🚢 Deployment
+```bash
+docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit
+```
 
-### Render (Recommended)
+## CI/CD
+
+The project uses GitHub Actions for:
+
+- **Backend**: Python 3.11 & 3.12 testing, linting, coverage
+- **Frontend**: ESLint, TypeScript check, production build
+- **Docker**: Multi-stage build verification
+- **Security**: Trivy vulnerability scanning
+- **Deployment**: Automated Render deployment
+
+## Deployment
+
+### Render
 
 1. Fork this repository
-2. Create a new **Web Service** on Render
-3. Connect your GitHub repository
-4. Use the provided `render.yaml` configuration
+2. Connect your Render account
+3. Create a Web Service from the `backend/` directory
+4. Create a Static Site from the root directory
 5. Set environment variables in Render dashboard
-6. Deploy!
+6. Push to `main` branch to trigger auto-deploy
 
 ### Manual Deployment
 
 ```bash
-# Build frontend
-npm run build
+# Build and run with Docker
+docker-compose up --build -d
 
-# Start production server
-npm start
+# Or deploy individually
+docker build -t stadiummind-backend ./backend
+docker run -d -p 8000:8000 stadiummind-backend
 
-# Backend (production)
-cd backend
-gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app
+docker build -t stadiummind-frontend -f Dockerfile.frontend .
+docker run -d -p 3000:3000 stadiummind-frontend
 ```
 
----
+## Security
 
-## 🔒 Security
+- JWT-based authentication with bcrypt password hashing
+- CSRF protection via double-submit cookie pattern
+- Rate limiting per IP address
+- CORS with strict origin validation
+- Security headers (HSTS, XSS Protection, CSP)
+- Token blacklisting for logout
+- Input validation on all API endpoints
+- Audit logging for security events
 
-### Security Features
+## Performance
 
-- ✅ JWT-based authentication with refresh tokens
-- ✅ CSRF protection
-- ✅ Rate limiting per IP
-- ✅ Input validation and sanitization
-- ✅ SQL injection prevention (parameterized queries)
-- ✅ XSS prevention (content sanitization)
-- ✅ Secure HTTP headers (HSTS, CSP, X-Frame-Options)
-- ✅ Token blacklisting for logout
-- ✅ Audit logging for all sensitive operations
-- ✅ Environment-based configuration (no hardcoded secrets)
+- Redis caching for API responses
+- Async database sessions with connection pooling
+- Lazy loading and code splitting (frontend)
+- Image optimization via Next.js
+- Tree-shaking via ES modules
+- Multi-stage Docker builds for smaller images
+- WebSocket compression for real-time data
 
-### Security Score: 98/100
+## Accessibility
 
----
+- WCAG 2.1 AA compliant
+- Skip-to-content navigation
+- Screen reader optimized
+- Keyboard navigation support
+- High contrast mode
+- Reduced motion support
+- Focus indicators
+- Semantic HTML
 
-## ♿ Accessibility
-
-### WCAG 2.2 AA Compliance
-
-- ✅ Skip-to-content navigation
-- ✅ ARIA labels and landmarks
-- ✅ Keyboard navigation with visible focus indicators
-- ✅ Screen reader support
-- ✅ High contrast mode
-- ✅ Reduced motion support
-- ✅ Font size adjustment (up to 140%)
-- ✅ Dyslexia-friendly mode
-- ✅ Semantic HTML structure
-- ✅ Color contrast ratios ≥ 4.5:1
-
-### Accessibility Score: 96/100
-
----
-
-## 📁 Project Structure
-
-```
-stadium-mind-ai/
-├── .github/workflows/     # CI/CD pipeline
-├── backend/
-│   ├── app/
-│   │   ├── api/routes/    # API endpoints
-│   │   ├── middleware/     # Security, CSRF, validation
-│   │   ├── models/        # Database models
-│   │   ├── schemas/       # Pydantic schemas
-│   │   ├── services/      # Business logic
-│   │   └── websocket/     # WebSocket manager
-│   ├── tests/             # Test suite
-│   ├── Dockerfile
-│   └── requirements.txt
-├── src/
-│   ├── app/               # Next.js pages
-│   ├── components/        # React components
-│   ├── contexts/          # React contexts
-│   ├── hooks/             # Custom hooks
-│   └── lib/               # Utilities
-├── public/                # Static assets
-├── docker-compose.yml
-├── render.yaml
-└── README.md
-```
-
----
-
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Run tests: `cd backend && python -m pytest tests/`
+5. Run linter: `cd backend && flake8 app tests`
+6. Submit a pull request
 
-### Development Guidelines
+## License
 
-- Write tests for all new features
-- Maintain 90%+ test coverage
-- Follow existing code style (Prettier for frontend, Black for backend)
-- Update documentation for API changes
-- Ensure WCAG 2.2 AA compliance for UI changes
+Proprietary - FIFA World Cup 2026
 
----
+## Team
 
-## 🗺 Roadmap
-
-### Q3 2026
-
-- [x] Multi-agent AI orchestration
-- [x] Real-time digital twin
-- [x] Predictive analytics
-- [x] Emergency response system
-- [x] Multilingual AI (11 languages)
-
-### Q4 2026
-
-- [ ] Edge deployment for offline operation
-- [ ] Mobile app for fans
-- [ ] Integration with existing CCTV systems
-- [ ] Advanced AR wayfinding
-- [ ] IoT sensor marketplace
-
-### Q1 2027
-
-- [ ] Computer vision integration
-- [ ] Predictive maintenance for stadium equipment
-- [ ] Advanced what-if simulation engine
-- [ ] Fan sentiment analysis
-- [ ] Sustainability reporting dashboard
-
----
-
-## 📄 License
-
-Proprietary - Built for FIFA World Cup 2026
-
----
-
-## 🙏 Acknowledgments
-
-- FIFA World Cup 2026 Organizing Committee
-- Stadium operations partners
-- Open source community (FastAPI, Next.js, Tailwind CSS)
-
----
-
-<p align="center">
-  Built with ❤️ for FIFA World Cup 2026
-</p>
+- **StadiumMind AI Team**
+- For support: [stadium-mind.ai](https://stadium-mind.ai)
