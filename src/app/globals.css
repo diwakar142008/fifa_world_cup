@@ -278,3 +278,39 @@ body {
     color: black;
   }
 }
+
+
+/* StadiumMind visual refinement — broadcast control-room, not generic glass UI */
+:root {
+  --color-stadium-500: #397b72;
+  --color-stadium-600: #28645d;
+  --color-gold-500: #e0a94c;
+  --color-gold-600: #c68d31;
+}
+body {
+  background: #0c1518;
+  background-image: linear-gradient(180deg, #101c20 0%, #0b1316 48%, #0c1518 100%);
+}
+::selection { background: rgba(224,169,76,.28); color: #fff; }
+.glass, .glass-gold {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 12px 34px rgba(0,0,0,.16);
+}
+.glass { background: #142226; border: 1px solid #293b3d; }
+.glass-gold { background: #1d2825; border: 1px solid rgba(224,169,76,.24); }
+.gradient-border { border-color: #34494a; }
+.gradient-border::before { display: none; }
+.text-gradient {
+  background: linear-gradient(110deg,#f0c477 0%,#e4a94c 55%,#f4d49a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
+button { transition: background-color .18s ease,border-color .18s ease,transform .18s ease; }
+button:hover { transform: translateY(-1px); }
+:focus-visible { outline-color: #e9bd70; }
+::-webkit-scrollbar-thumb { background: #49615c; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
