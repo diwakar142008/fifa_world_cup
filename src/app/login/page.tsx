@@ -33,7 +33,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050510] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-ink flex items-center justify-center px-4">
       {/* Background effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-stadium-500/5 blur-[120px]" />
@@ -50,7 +50,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-3 mb-6">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-lg shadow-gold-500/20">
-              <Brain className="w-6 h-6 text-[#050510]" />
+              <Brain className="w-6 h-6 text-ink" />
             </div>
             <div className="text-left">
               <span className="font-bold text-xl text-white">
@@ -124,7 +124,7 @@ export default function LoginPage() {
               type="submit"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 text-[#050510] font-semibold text-sm hover:from-gold-400 hover:to-gold-500 transition-all duration-200 shadow-lg shadow-gold-500/20 flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 text-ink font-semibold text-sm hover:from-gold-400 hover:to-gold-500 transition-all duration-200 shadow-lg shadow-gold-500/20 flex items-center justify-center gap-2"
             >
               Sign In
               <ArrowRight className="w-4 h-4" />

@@ -37,16 +37,16 @@ export default function DashboardHeader({
   ];
 
   return (
-    <header className="sticky top-0 z-30 bg-[#050510]/80 backdrop-blur-xl border-b border-white/5">
+    <header className="sticky top-0 z-30 bg-ink/90 backdrop-blur-md border-b border-line">
       <div className="flex items-center justify-between px-4 md:px-6 py-3">
         {/* Left: Title */}
         <div className="flex items-center gap-3 min-w-0">
           <div>
-            <h1 className="text-lg md:text-xl font-bold text-white truncate">
+            <h1 className="font-display text-2xl md:text-[1.75rem] font-semibold uppercase tracking-[0.03em] text-white truncate">
               {title}
             </h1>
             {subtitle && (
-              <p className="text-xs md:text-sm text-stadium-400 truncate">
+              <p className="text-xs md:text-sm text-stadium-400 truncate mt-0.5">
                 {subtitle}
               </p>
             )}
@@ -56,50 +56,50 @@ export default function DashboardHeader({
         {/* Right: Actions */}
         <div className="flex items-center gap-2">
           {/* Role badge */}
-          <div className={clsx("hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r text-white text-xs font-semibold", roleGradient)}>
+          <div className={clsx("hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-gradient-to-r text-white text-xs font-semibold uppercase tracking-[0.12em]", roleGradient)}>
             <Brain className="w-3.5 h-3.5" />
             {role}
           </div>
 
           {/* Search */}
           <button
-            className="p-2 rounded-xl hover:bg-white/5 text-stadium-400 hover:text-stadium-200 transition-all"
+            className="p-2 rounded-lg hover:bg-white/5 text-stadium-400 hover:text-stadium-100"
             aria-label="Search"
           >
-            <Search className="w-4.5 h-4.5" />
+            <Search className="w-[18px] h-[18px]" />
           </button>
 
           {/* Dark mode toggle */}
           <button
             onClick={() => setDarkMode(!darkMode)}
-            className="p-2 rounded-xl hover:bg-white/5 text-stadium-400 hover:text-stadium-200 transition-all"
+            className="p-2 rounded-lg hover:bg-white/5 text-stadium-400 hover:text-stadium-100"
             aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
           >
-            {darkMode ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
+            {darkMode ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
           </button>
 
           {/* Notifications */}
           <div className="relative">
             <button
               onClick={() => { setNotificationsOpen(!notificationsOpen); setProfileOpen(false); }}
-              className="p-2 rounded-xl hover:bg-white/5 text-stadium-400 hover:text-stadium-200 transition-all relative"
+              className="p-2 rounded-lg hover:bg-white/5 text-stadium-400 hover:text-stadium-100 relative"
               aria-label="Notifications"
               aria-expanded={notificationsOpen}
             >
-              <Bell className="w-4.5 h-4.5" />
+              <Bell className="w-[18px] h-[18px]" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose animate-pulse" />
             </button>
 
             {notificationsOpen && (
-              <div className="absolute right-0 top-full mt-2 w-80 glass-strong rounded-2xl shadow-2xl overflow-hidden z-50">
-                <div className="px-4 py-3 border-b border-white/5">
+              <div className="absolute right-0 top-full mt-2 w-80 glass-strong rounded-xl overflow-hidden z-50">
+                <div className="px-4 py-3 border-b border-line">
                   <h3 className="text-sm font-semibold text-white">Notifications</h3>
                 </div>
                 <div className="max-h-72 overflow-y-auto">
                   {notifications.map((n) => (
                     <div
                       key={n.id}
-                      className="px-4 py-3 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0 cursor-pointer"
+                      className="px-4 py-3 hover:bg-white/5 transition-colors border-b border-line last:border-0 cursor-pointer"
                     >
                       <div className="flex items-start gap-3">
                         <div className={clsx(
@@ -116,7 +116,7 @@ export default function DashboardHeader({
                     </div>
                   ))}
                 </div>
-                <div className="px-4 py-2.5 border-t border-white/5 text-center">
+                <div className="px-4 py-2.5 border-t border-line text-center">
                   <button className="text-xs text-gold-400 hover:text-gold-300 transition-colors">
                     View all notifications
                   </button>
@@ -129,7 +129,7 @@ export default function DashboardHeader({
           <div className="relative">
             <button
               onClick={() => { setProfileOpen(!profileOpen); setNotificationsOpen(false); }}
-              className="w-8 h-8 rounded-xl bg-gradient-to-br from-stadium-400 to-stadium-600 flex items-center justify-center hover:scale-105 transition-transform"
+              className="w-8 h-8 rounded-lg bg-stadium-700 ring-1 ring-stadium-500/50 flex items-center justify-center hover:bg-stadium-600"
               aria-label="Profile menu"
               aria-expanded={profileOpen}
             >
@@ -137,8 +137,8 @@ export default function DashboardHeader({
             </button>
 
             {profileOpen && (
-              <div className="absolute right-0 top-full mt-2 w-48 glass-strong rounded-2xl shadow-2xl overflow-hidden z-50">
-                <div className="px-4 py-3 border-b border-white/5">
+              <div className="absolute right-0 top-full mt-2 w-48 glass-strong rounded-xl overflow-hidden z-50">
+                <div className="px-4 py-3 border-b border-line">
                   <p className="text-sm font-medium text-white">Alex Morgan</p>
                   <p className="text-xs text-stadium-400">Operations Manager</p>
                 </div>
@@ -155,7 +155,7 @@ export default function DashboardHeader({
                       {item.label}
                     </button>
                   ))}
-                  <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-rose hover:text-rose/80 hover:bg-white/5 transition-colors border-t border-white/5 mt-1">
+                  <button className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-rose hover:text-rose/80 hover:bg-white/5 transition-colors border-t border-line mt-1">
                     <LogOut className="w-4 h-4" />
                     Sign Out
                   </button>

@@ -403,10 +403,10 @@ export default function StadiumMap({
 
       {/* Loading State */}
       {!mapLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-[#050510] z-[1000]">
+        <div className="absolute inset-0 flex items-center justify-center bg-ink z-[1000]">
           <div className="text-center">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center mx-auto mb-3 animate-pulse">
-              <div className="w-5 h-5 border-2 border-[#050510] border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-ink border-t-transparent rounded-full animate-spin" />
             </div>
             <p className="text-sm text-stadium-400">Loading stadium map...</p>
           </div>

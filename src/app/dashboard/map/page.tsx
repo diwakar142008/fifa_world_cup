@@ -28,10 +28,10 @@ import clsx from "clsx";
 const StadiumMap = dynamic(() => import("@/components/map/StadiumMap"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full flex items-center justify-center bg-[#050510] rounded-2xl">
+    <div className="w-full h-full flex items-center justify-center bg-ink rounded-2xl">
       <div className="text-center">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center mx-auto mb-3 animate-pulse">
-          <div className="w-5 h-5 border-2 border-[#050510] border-t-transparent rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-ink border-t-transparent rounded-full animate-spin" />
         </div>
         <p className="text-sm text-stadium-400">Loading stadium map...</p>
       </div>
@@ -296,7 +296,7 @@ export default function StadiumMapPage() {
         </div>
 
         {/* ─── Side Panel ────────────────────────────────────────── */}
-        <div className="w-72 lg:w-80 xl:w-88 bg-[#050510]/90 backdrop-blur-xl border-l border-white/5 overflow-y-auto shrink-0 hidden lg:block">
+        <div className="w-72 lg:w-80 xl:w-88 bg-ink/90 backdrop-blur-xl border-l border-white/5 overflow-y-auto shrink-0 hidden lg:block">
           <div className="p-4 space-y-5">
             {/* Search */}
             <div className="relative">
@@ -337,7 +337,7 @@ export default function StadiumMapPage() {
                     >
                       {layer.visible && (
                         <svg
-                          className="w-3 h-3 text-[#050510]"
+                          className="w-3 h-3 text-ink"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"

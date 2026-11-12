@@ -107,7 +107,7 @@ export default function FloatingAIAssistant() {
             className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 shadow-xl shadow-gold-500/30 flex items-center justify-center hover:shadow-gold-500/50 transition-shadow"
             aria-label="Open AI Assistant"
           >
-            <Brain className="w-6 h-6 text-[#050510]" />
+            <Brain className="w-6 h-6 text-ink" />
             <span className="absolute inset-0 rounded-full animate-ping bg-gold-500/20" />
           </motion.button>
         )}
@@ -128,14 +128,14 @@ export default function FloatingAIAssistant() {
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className={clsx(
               "fixed bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-3rem)] rounded-2xl overflow-hidden flex flex-col",
-              "bg-[#0a0a1a]/95 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/40"
+              "bg-ink/95 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/40"
             )}
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-gradient-to-r from-gold-500/10 to-transparent">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center">
-                  <Brain className="w-4 h-4 text-[#050510]" />
+                  <Brain className="w-4 h-4 text-ink" />
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-white flex items-center gap-1.5">
@@ -183,7 +183,7 @@ export default function FloatingAIAssistant() {
                     >
                       {msg.role === "ai" && (
                         <div className="w-6 h-6 rounded-md bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shrink-0 mt-0.5">
-                          <Brain className="w-3 h-3 text-[#050510]" />
+                          <Brain className="w-3 h-3 text-ink" />
                         </div>
                       )}
                       <div
@@ -223,7 +223,7 @@ export default function FloatingAIAssistant() {
                   {isTyping && (
                     <div className="flex gap-2">
                       <div className="w-6 h-6 rounded-md bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shrink-0">
-                        <Brain className="w-3 h-3 text-[#050510]" />
+                        <Brain className="w-3 h-3 text-ink" />
                       </div>
                       <div className="rounded-xl px-3 py-2.5 bg-white/5 border border-white/5">
                         <div className="flex gap-1">

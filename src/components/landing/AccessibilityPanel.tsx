@@ -23,9 +23,9 @@ export default function AccessibilityPanel() {
   }, [isOpen]);
 
   const toggles = [
-    { label: "High Contrast", desc: "Increase text and border contrast", icon: Eye, active: settings.highContrast, toggle: toggleHighContrast },
-    { label: "Large Font", desc: "Increase base font size", icon: Type, active: settings.largeFont, toggle: toggleLargeFont },
-    { label: "Reduced Motion", desc: "Disable animations", icon: ZapOff, active: settings.reducedMotion, toggle: toggleReducedMotion },
+    { label: "High Contrast", desc: "Increase text and border contrast", icon: Eye, active: settings.highContrast === "high", toggle: toggleHighContrast },
+    { label: "Large Font", desc: "Increase base font size", icon: Type, active: settings.fontSize !== "normal", toggle: toggleLargeFont },
+    { label: "Reduced Motion", desc: "Disable animations", icon: ZapOff, active: settings.reducedMotion === "reduced", toggle: toggleReducedMotion },
   ];
 
   return (

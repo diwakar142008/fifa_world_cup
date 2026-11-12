@@ -69,7 +69,7 @@ export default function OrganizerDashboard() {
         <div className="glass-gold rounded-2xl p-4 md:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center">
-              <Radio className="w-5 h-5 text-[#050510]" />
+              <Radio className="w-5 h-5 text-ink" />
             </div>
             <div>
               <h2 className="text-white font-semibold text-sm">

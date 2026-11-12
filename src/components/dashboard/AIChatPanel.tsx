@@ -98,7 +98,7 @@ export default function AIChatPanel() {
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 border-b border-white/5">
         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center">
-          <Brain className="w-4 h-4 text-[#050510]" />
+          <Brain className="w-4 h-4 text-ink" />
         </div>
         <div>
           <h3 className="text-sm font-semibold text-white flex items-center gap-2">
@@ -121,7 +121,7 @@ export default function AIChatPanel() {
           >
             {msg.role === "ai" && (
               <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shrink-0 mt-1">
-                <Brain className="w-3.5 h-3.5 text-[#050510]" />
+                <Brain className="w-3.5 h-3.5 text-ink" />
               </div>
             )}
             <div
@@ -184,7 +184,7 @@ export default function AIChatPanel() {
         {isTyping && (
           <div className="flex gap-3">
             <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shrink-0">
-              <Brain className="w-3.5 h-3.5 text-[#050510]" />
+              <Brain className="w-3.5 h-3.5 text-ink" />
             </div>
             <div className="rounded-2xl px-4 py-3 bg-white/5 border border-white/5">
               <Loader2 className="w-4 h-4 text-gold-400 animate-spin" />

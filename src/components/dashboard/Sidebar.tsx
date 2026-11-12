@@ -63,15 +63,21 @@ function NavItem({
     <Link
       href={href}
       className={clsx(
-        "flex items-center gap-3 rounded-xl transition-all duration-200 group",
+        "relative flex items-center gap-3 rounded-lg transition-colors duration-200 group",
         collapsed ? "justify-center p-3" : "px-3 py-2.5",
         isActive
-          ? "bg-gold-500/10 text-gold-400 border border-gold-500/20"
-          : "text-stadium-400 hover:text-stadium-200 hover:bg-white/5 border border-transparent"
+          ? "bg-gold-500/10 text-gold-300"
+          : "text-stadium-400 hover:text-stadium-100 hover:bg-white/5"
       )}
       aria-label={label}
       aria-current={isActive ? "page" : undefined}
     >
+      {isActive && (
+        <span
+          className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r bg-gold-400"
+          aria-hidden="true"
+        />
+      )}
       <Icon className="w-5 h-5 shrink-0" aria-hidden="true" />
       {!collapsed && (
         <span className="text-sm font-medium truncate">{label}</span>
@@ -89,24 +95,24 @@ export default function Sidebar() {
   return (
     <aside
       className={clsx(
-        "flex flex-col bg-[#050510]/90 backdrop-blur-xl border-r border-white/5 h-screen sticky top-0 transition-all duration-300 z-40",
-        collapsed ? "w-16" : "w-60"
+        "flex flex-col bg-ink/95 border-r border-line h-screen sticky top-0 transition-all duration-300 z-40",
+        collapsed ? "w-16" : "w-64"
       )}
       aria-label="Dashboard navigation"
     >
       {/* Logo */}
-      <div className={clsx("flex items-center border-b border-white/5", collapsed ? "justify-center p-3" : "px-4 py-4")}>
+      <div className={clsx("flex items-center border-b border-line", collapsed ? "justify-center p-3" : "px-4 py-4")}>
         <Link href="/dashboard" className="flex items-center gap-3 group" aria-label="Dashboard home">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-lg shadow-gold-500/20 shrink-0">
-            <Brain className="w-5 h-5 text-[#050510]" />
+          <div className="w-9 h-9 rounded-md bg-gold-500 flex items-center justify-center shrink-0 ring-1 ring-gold-200/40">
+            <Brain className="w-5 h-5 text-ink" />
           </div>
           {!collapsed && (
             <div>
-              <span className="font-bold text-sm text-white">
+              <span className="block font-display text-xl font-semibold uppercase tracking-[0.06em] leading-none text-white">
                 Stadium<span className="text-gold-400">Mind</span>
               </span>
-              <span className="block text-[9px] uppercase tracking-[0.15em] text-stadium-400 font-medium -mt-0.5">
-                AI
+              <span className="block text-[10px] uppercase tracking-[0.22em] text-stadium-400 font-medium mt-1">
+                Operations AI
               </span>
             </div>
           )}
@@ -115,6 +121,9 @@ export default function Sidebar() {
 
       {/* Role Navigation */}
       <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto" aria-label="Role dashboards">
+        {!collapsed && (
+          <p className="eyebrow px-3 pb-2 !text-stadium-500">Role views</p>
+        )}
         {roles.map((role) => (
           <NavItem
             key={role.id}
@@ -128,7 +137,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom Actions */}
-      <div className="px-2 py-3 border-t border-white/5 space-y-1">
+      <div className="px-2 py-3 border-t border-line space-y-1">
         <NavItem
           icon={Activity}
           label="AI Operations"
@@ -162,7 +171,7 @@ export default function Sidebar() {
         <button
           onClick={() => setCollapsed(!collapsed)}
           className={clsx(
-            "flex items-center gap-3 w-full rounded-xl transition-all duration-200 text-stadium-400 hover:text-stadium-200 hover:bg-white/5",
+            "flex items-center gap-3 w-full rounded-lg transition-colors duration-200 text-stadium-500 hover:text-stadium-100 hover:bg-white/5",
             collapsed ? "justify-center p-3" : "px-3 py-2.5"
           )}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}

@@ -38,7 +38,7 @@ export default function StatusBadge({ status, label, className }: StatusBadgePro
   return (
     <span
       className={clsx(
-        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium",
+        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold uppercase tracking-[0.08em]",
         config.bg,
         config.text,
         className

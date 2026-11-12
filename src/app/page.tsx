@@ -22,7 +22,6 @@ import {
   Globe,
   Accessibility,
   ArrowRight,
-  ChevronDown,
   Menu,
   X,
   type LucideIcon,
@@ -303,7 +302,7 @@ function BackToTop() {
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 text-[#050510] shadow-xl shadow-gold-500/30 hover:shadow-gold-500/50 hover:scale-110 transition-all duration-300 flex items-center justify-center"
+          className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 text-ink shadow-xl shadow-gold-500/30 hover:shadow-gold-500/50 hover:scale-110 transition-all duration-300 flex items-center justify-center"
           aria-label="Scroll to top"
         >
           <ChevronUp className="w-5 h-5" />
@@ -467,7 +466,7 @@ function Navbar() {
       className={clsx(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         scrolled
-          ? "bg-[#050510]/80 backdrop-blur-xl border-b border-white/5 shadow-lg shadow-black/20"
+          ? "bg-ink/85 backdrop-blur-md border-b border-line"
           : "bg-transparent",
       )}
     >
@@ -478,16 +477,16 @@ function Navbar() {
             <motion.div
               whileHover={{ rotate: 180, scale: 1.1 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="w-8 h-8 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-lg shadow-gold-500/20 group-hover:shadow-gold-500/40 transition-shadow duration-300"
+              className="w-9 h-9 rounded-md bg-gold-500 flex items-center justify-center ring-1 ring-gold-200/40"
             >
-              <Brain className="w-5 h-5 text-[#050510]" />
+              <Brain className="w-5 h-5 text-ink" />
             </motion.div>
             <div className="hidden sm:block">
-              <span className="font-bold text-lg tracking-tight text-white">
+              <span className="block font-display text-2xl font-semibold uppercase tracking-[0.06em] leading-none text-white">
                 Stadium<span className="text-gold-400">Mind</span>
               </span>
-              <span className="block text-[10px] uppercase tracking-[0.15em] text-stadium-300 font-medium -mt-0.5">
-                AI
+              <span className="block text-[10px] uppercase tracking-[0.24em] text-stadium-300 font-medium mt-1">
+                Operations AI
               </span>
             </div>
           </a>
@@ -498,7 +497,7 @@ function Navbar() {
               <a
                 key={link.label}
                 href={link.href}
-                className="px-4 py-2 text-sm text-stadium-200 hover:text-white rounded-full hover:bg-white/5 transition-all duration-200"
+                className="px-4 py-2 text-sm text-stadium-200 hover:text-white rounded-md hover:bg-white/5 transition-colors duration-200"
               >
                 {link.label}
               </a>
@@ -508,7 +507,7 @@ function Navbar() {
               href="/login"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="ml-4 px-5 py-2.5 text-sm font-semibold rounded-full bg-gradient-to-r from-gold-500 to-gold-600 text-[#050510] hover:from-gold-400 hover:to-gold-500 transition-all duration-200 shadow-lg shadow-gold-500/20 hover:shadow-gold-500/40"
+              className="ml-4 px-5 py-2.5 text-sm font-semibold rounded-md bg-gold-500 text-ink hover:bg-gold-400 transition-colors duration-200"
             >
               Get Early Access
             </motion.a>
@@ -536,7 +535,7 @@ function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-white/5 bg-[#050510]/95 backdrop-blur-xl"
+            className="md:hidden border-t border-white/5 bg-ink/95 backdrop-blur-xl"
           >
             <div className="px-4 py-4 space-y-1">
               {links.map((link) => (
@@ -552,7 +551,7 @@ function Navbar() {
               <a
                 href="/login"
                 onClick={() => setMobileOpen(false)}
-                className="block mt-3 px-4 py-3 text-sm font-semibold rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 text-[#050510] text-center"
+                className="block mt-3 px-4 py-3 text-sm font-semibold rounded-xl bg-gradient-to-r from-gold-500 to-gold-600 text-ink text-center"
               >
                 Get Early Access
               </a>
@@ -574,10 +573,10 @@ function Hero() {
   const gridOpacity = useTransform(scrollY, [0, 400], [0.2, 0]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <section className="relative min-h-screen flex items-center overflow-hidden pt-20">
       {/* Stadium background effect */}
       <motion.div className="absolute inset-0" style={{ y: heroParallax }}>
-        <div className="absolute inset-0 bg-gradient-to-b from-stadium-950/40 via-transparent to-[#050510] z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-stadium-950/40 via-transparent to-ink z-10" />
         <motion.div
           className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full"
           style={{ opacity: heroOpacity }}
@@ -601,7 +600,7 @@ function Hero() {
             className="absolute inset-0"
             style={{
               backgroundImage:
-                "linear-gradient(rgba(99,102,241,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.08) 1px, transparent 1px)",
+                "linear-gradient(rgba(132,170,164,0.09) 1px, transparent 1px), linear-gradient(90deg, rgba(132,170,164,0.09) 1px, transparent 1px)",
               backgroundSize: "80px 80px",
             }}
           />
@@ -609,131 +608,98 @@ function Hero() {
       </motion.div>
 
       <motion.div
-        className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 text-center"
+        className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
         style={{ scale: heroScale, opacity: heroOpacity }}
       >
-        {/* World Cup Emblem Animation */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-8"
-        >
-          <WorldCupEmblem />
-        </motion.div>
+        <div className="grid lg:grid-cols-[1.4fr_1fr] gap-12 lg:gap-16 items-center">
+          {/* Copy */}
+          <div className="text-left">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-gold-500/10 border border-gold-500/30 text-gold-300 text-xs font-semibold uppercase tracking-[0.2em] mb-7"
+            >
+              <Trophy className="w-3.5 h-3.5" aria-hidden="true" />
+              FIFA World Cup 2026
+            </motion.div>
 
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/20 text-gold-400 text-xs font-medium uppercase tracking-wider mb-8"
-        >
-          <Trophy className="w-3.5 h-3.5" />
-          FIFA World Cup 2026
-        </motion.div>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="text-[2.75rem] sm:text-6xl md:text-7xl xl:text-[5.5rem] font-semibold uppercase leading-[0.92] tracking-[0.01em] mb-7"
+            >
+              <span className="text-white">The Generative AI</span>
+              <br />
+              <span className="text-gradient">Operating System</span>
+              <br />
+              <span className="text-white">for World Cup 2026</span>
+              <br />
+              <span className="text-stadium-400">Stadiums</span>
+            </motion.h1>
 
-        {/* Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.4 }}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.1] tracking-tight mb-6"
-        >
-          <span className="text-white">The Generative AI</span>
-          <br />
-          <span className="text-gradient">Operating System</span>
-          <br />
-          <span className="text-white">for FIFA World Cup</span>
-          <br />
-          <span className="text-gradient">2026 Stadiums</span>
-        </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="max-w-xl text-base sm:text-lg text-stadium-300 leading-relaxed mb-9"
+            >
+              A real-time <span className="text-white font-medium">Digital Twin</span> of every
+              stadium. Twelve specialized AI agents think, reason, predict, and act — serving
+              fans, organizers, security, medical teams, and everyone in between.
+            </motion.p>
 
-        {/* Description */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="max-w-3xl mx-auto text-base sm:text-lg md:text-xl text-stadium-300 leading-relaxed mb-10"
-        >
-          A real-time{" "}
-          <span className="text-white font-medium">Digital Twin</span> of every
-          stadium.
-          <span className="hidden sm:inline">
-            <br />
-          </span>
-          <span className="text-stadium-200/80">
-            Twelve specialized AI agents think, reason, predict, and act —
-            serving
-          </span>
-          <br />
-          <span className="text-stadium-200/80">
-            fans, organizers, security, medical teams, and everyone in between.
-          </span>
-        </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.65 }}
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
+            >
+              <a
+                href="#features"
+                className="group px-7 py-3.5 rounded-md bg-gold-500 text-ink font-semibold text-base hover:bg-gold-400 transition-colors duration-200 flex items-center justify-center gap-2"
+              >
+                Explore the Platform
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+              </a>
+              <a
+                href="#agents"
+                className="px-7 py-3.5 rounded-md border border-stadium-600 text-stadium-100 hover:border-stadium-400 hover:bg-white/5 transition-colors duration-200 text-base font-medium flex items-center justify-center gap-2"
+              >
+                Meet the AI Agents
+                <Brain className="w-4 h-4" aria-hidden="true" />
+              </a>
+            </motion.div>
+          </div>
 
-        {/* Countdown Timer */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-          className="mb-10"
-        >
-          <CountdownTimer />
-        </motion.div>
-
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
-        >
-          <motion.a
-            href="#features"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="group px-8 py-3.5 rounded-full bg-gradient-to-r from-gold-500 to-gold-600 text-[#050510] font-semibold text-base hover:from-gold-400 hover:to-gold-500 transition-all duration-300 shadow-xl shadow-gold-500/20 hover:shadow-gold-500/40 flex items-center gap-2"
-          >
-            Explore the Platform
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </motion.a>
-          <motion.a
-            href="#agents"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="group px-8 py-3.5 rounded-full border border-white/10 text-stadium-200 hover:text-white hover:bg-white/5 transition-all duration-300 text-base font-medium flex items-center gap-2"
-          >
-            Meet the AI Agents
-            <Brain className="w-4 h-4" />
-          </motion.a>
-        </motion.div>
+          {/* Emblem + kickoff clock */}
+          <div className="flex flex-col items-center gap-8">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <WorldCupEmblem />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.7 }}
+            >
+              <CountdownTimer />
+            </motion.div>
+          </div>
+        </div>
 
         {/* Animated Stats */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.9 }}
-          className="max-w-4xl mx-auto mb-16"
+          className="max-w-5xl mt-16 lg:mt-20"
         >
           <AnimatedStats stats={heroStats} />
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="flex flex-col items-center gap-2 text-stadium-500"
-        >
-          <motion.span
-            animate={{ y: [0, 4, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="text-xs uppercase tracking-[0.2em]"
-          >
-            Scroll
-          </motion.span>
-          <ChevronDown className="w-4 h-4 animate-bounce" />
         </motion.div>
       </motion.div>
     </section>
@@ -1088,7 +1054,7 @@ function FeaturesSection() {
               <Reveal key={feat.title} delay={i * 0.05}>
                 <TiltCard>
                   <div className="gradient-border rounded-2xl p-0 bg-transparent">
-                    <div className="bg-[#050510] rounded-2xl p-5 md:p-6 h-full group hover:bg-white/[0.02] transition-all duration-300">
+                    <div className="bg-ink rounded-2xl p-5 md:p-6 h-full group hover:bg-white/[0.02] transition-all duration-300">
                       <motion.div
                         className={clsx(
                           "w-11 h-11 rounded-xl bg-gradient-to-br flex items-center justify-center mb-4",
@@ -1347,7 +1313,7 @@ function CTASection() {
                 href="#"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-gold-500 to-gold-600 text-[#050510] font-semibold text-base hover:from-gold-400 hover:to-gold-500 transition-all duration-300 shadow-xl shadow-gold-500/20 hover:shadow-gold-500/40"
+                className="px-8 py-3.5 rounded-full bg-gradient-to-r from-gold-500 to-gold-600 text-ink font-semibold text-base hover:from-gold-400 hover:to-gold-500 transition-all duration-300 shadow-xl shadow-gold-500/20 hover:shadow-gold-500/40"
               >
                 Request a Demo
               </motion.a>
@@ -1378,7 +1344,7 @@ function Footer() {
           <div className="lg:col-span-2">
             <a href="#" className="inline-flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center">
-                <Brain className="w-5 h-5 text-[#050510]" />
+                <Brain className="w-5 h-5 text-ink" />
               </div>
               <div>
                 <span className="font-bold text-base text-white">
@@ -1450,7 +1416,7 @@ function Footer() {
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen bg-[#050510]">
+    <div className="relative min-h-screen bg-ink">
       <ScrollProgressBar />
       <ParticleBackground />
       <Navbar />

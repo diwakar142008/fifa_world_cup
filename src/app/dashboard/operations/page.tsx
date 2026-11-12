@@ -603,7 +603,7 @@ export default function OperationsDashboard() {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center">
-                      <Brain className="w-5 h-5 text-[#050510]" />
+                      <Brain className="w-5 h-5 text-ink" />
                     </div>
                     <div>
                       <h2 className="text-lg font-bold text-white">

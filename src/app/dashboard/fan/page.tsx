@@ -34,7 +34,7 @@ export default function FanDashboard() {
         <div className="glass-gold rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center">
-              <Star className="w-7 h-7 text-[#050510]" />
+              <Star className="w-7 h-7 text-ink" />
             </div>
             <div>
               <h2 className="text-white font-bold text-lg">Quarter-Final: BRA v ARG</h2>
@@ -45,7 +45,7 @@ export default function FanDashboard() {
               </div>
             </div>
           </div>
-          <button className="px-5 py-2.5 rounded-full bg-gradient-to-r from-gold-500 to-gold-600 text-[#050510] font-semibold text-sm hover:from-gold-400 hover:to-gold-500 transition-all">
+          <button className="px-5 py-2.5 rounded-full bg-gradient-to-r from-gold-500 to-gold-600 text-ink font-semibold text-sm hover:from-gold-400 hover:to-gold-500 transition-all">
             Navigate to Seat
           </button>
         </div>

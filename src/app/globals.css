@@ -1,82 +1,132 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
-   StadiumMind AI - Global Styles
-   WCAG 2.2 AA Compliant Design System
+   StadiumMind AI — Global Styles
+   Broadcast control-room look: floodlit night, pitch-stripe texture,
+   gold scoreboard accents. WCAG 2.2 AA accessibility modes preserved.
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Custom Properties ─────────────────────────────────────── */
+/* ─── Design tokens (generate Tailwind utilities) ───────────── */
+@theme {
+  /* Fonts (loaded via @fontsource in layout.tsx) */
+  --font-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* "stadium" — floodlit slate-teal. 300–500 are the readable text tiers on dark surfaces. */
+  --color-stadium-50: #f1f7f6;
+  --color-stadium-100: #e2eeec;
+  --color-stadium-200: #c5dcd8;
+  --color-stadium-300: #a3c4bf;
+  --color-stadium-400: #84aaa4;
+  --color-stadium-500: #6c9690;
+  --color-stadium-600: #4a726c;
+  --color-stadium-700: #365a55;
+  --color-stadium-800: #26433f;
+  --color-stadium-900: #1a302e;
+  --color-stadium-950: #101f21;
+
+  /* "gold" — scoreboard accent */
+  --color-gold-50: #fbf5e6;
+  --color-gold-100: #f6e8c2;
+  --color-gold-200: #f0d794;
+  --color-gold-300: #ecc673;
+  --color-gold-400: #e9bd70;
+  --color-gold-500: #e0a94c;
+  --color-gold-600: #c68d31;
+  --color-gold-700: #9f6f24;
+
+  /* Status colors (used bare: bg-rose, text-emerald/80, etc.) */
+  --color-rose: #f0737b;
+  --color-emerald: #4cc38a;
+  --color-amber: #f2b84b;
+
+  /* Surfaces */
+  --color-ink: #0c1518;
+  --color-panel: #142226;
+  --color-panel-strong: #1a2d31;
+  --color-line: #293b3d;
+
+  --animate-emblem-glow: emblem-glow 4.5s ease-in-out infinite;
+  --animate-emblem-rotate: emblem-rotate 48s linear infinite;
+}
+
 :root {
-  /* Brand Colors */
-  --color-stadium-50: #eef2ff;
-  --color-stadium-100: #e0e7ff;
-  --color-stadium-200: #c7d2fe;
-  --color-stadium-300: #a5b4fc;
-  --color-stadium-400: #818cf8;
-  --color-stadium-500: #6366f1;
-  --color-stadium-600: #4f46e5;
-  --color-stadium-700: #4338ca;
-  --color-stadium-800: #3730a3;
-  --color-stadium-900: #312e81;
-  --color-stadium-950: #1e1b4b;
+  /* Text tiers (swapped by .high-contrast) */
+  --color-text-primary: #f4f8f7;
+  --color-text-secondary: #c5dcd8;
+  --color-text-muted: #94b3ae;
+  --color-text-disabled: #5f7c77;
 
-  --color-gold-50: #fffbeb;
-  --color-gold-100: #fef3c7;
-  --color-gold-200: #fde68a;
-  --color-gold-300: #fcd34d;
-  --color-gold-400: #fbbf24;
-  --color-gold-500: #f59e0b;
-  --color-gold-600: #d97706;
-
-  /* WCAG AA Compliant Text Colors */
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #cbd5e1;
-  --color-text-muted: #94a3b8;
-  --color-text-disabled: #64748b;
-
-  /* Focus Ring (WCAG AA 3:1 contrast) */
-  --color-focus-ring: #60a5fa;
-
-  /* Spacing */
+  /* Focus ring */
+  --color-focus-ring: #e9bd70;
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
 }
 
-/* ─── Base Styles ───────────────────────────────────────────── */
-* {
-  box-sizing: border-box;
+/* ─── Base ──────────────────────────────────────────────────── */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--color-text-primary);
+    background-color: var(--color-ink);
+    /* Mown-pitch stripes + a floodlight wash from the top */
+    background-image:
+      radial-gradient(ellipse 80% 40% at 50% -10%, rgba(224, 169, 76, 0.07), transparent 70%),
+      repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.014) 0 88px,
+        transparent 88px 176px
+      );
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    line-height: 1.05;
+  }
+
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a,
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: rgba(224, 169, 76, 0.28);
+    color: #fff;
+  }
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family:
-    "Inter",
-    system-ui,
-    -apple-system,
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: var(--color-text-primary);
-  background-color: #050510;
-}
-
-/* ─── Focus Styles (WCAG 2.2 AA 2.4.11) ────────────────────── */
-:focus-visible {
-  outline: var(--focus-ring-width) solid var(--color-focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  border-radius: 4px;
-}
-
-/* Keyboard-only focus ring (no mouse focus) */
+/* ─── Accessibility modes (unlayered on purpose: they must win) ─ */
 .keyboard-mode *:focus {
   outline: var(--focus-ring-width) solid var(--color-focus-ring) !important;
   outline-offset: var(--focus-ring-offset) !important;
 }
 
-/* ─── Skip to Content (WCAG 2.4.1) ──────────────────────────── */
 .skip-to-content {
   position: absolute;
   left: -9999px;
@@ -84,7 +134,7 @@ body {
   z-index: 9999;
   padding: 8px 16px;
   background: var(--color-gold-500);
-  color: #050510;
+  color: var(--color-ink);
   font-weight: 600;
   text-decoration: none;
   border-radius: 0 0 4px 0;
@@ -94,7 +144,6 @@ body {
   left: 0;
 }
 
-/* ─── Reduced Motion (WCAG 2.3.3) ───────────────────────────── */
 .reduce-motion *,
 .reduce-motion *::before,
 .reduce-motion *::after {
@@ -104,24 +153,23 @@ body {
   scroll-behavior: auto !important;
 }
 
-/* ─── High Contrast Mode (WCAG 1.4.6) ───────────────────────── */
 .high-contrast {
   --color-text-primary: #ffffff;
-  --color-text-secondary: #e2e8f0;
-  --color-text-muted: #cbd5e1;
+  --color-text-secondary: #e6f0ee;
+  --color-text-muted: #cfe0dd;
 }
 
 .high-contrast .glass,
-.high-contrast .glass-gold {
-  background: rgba(255, 255, 255, 0.12) !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
-}
-
-.high-contrast .gradient-border {
+.high-contrast .glass-gold,
+.high-contrast .glass-strong {
+  background: #1d3236 !important;
   border-color: rgba(255, 255, 255, 0.4) !important;
 }
 
-/* ─── Font Size Adjustments ─────────────────────────────────── */
+.high-contrast .gradient-border {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
 .text-large {
   font-size: 120% !important;
 }
@@ -135,7 +183,6 @@ body {
   line-height: 1.6;
 }
 
-/* ─── Dyslexia Friendly Mode ────────────────────────────────── */
 .dyslexia-friendly {
   --font-family: "OpenDyslexic", "Comic Sans MS", system-ui, sans-serif;
 }
@@ -157,7 +204,6 @@ body {
   line-height: 1.7;
 }
 
-/* ─── Screen Reader Only (WCAG 1.1.1) ───────────────────────── */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -170,49 +216,105 @@ body {
   border-width: 0;
 }
 
-/* ─── Glass Morphism ────────────────────────────────────────── */
-.glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* ─── Surfaces ──────────────────────────────────────────────── */
+@layer components {
+  .glass {
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.03),
+      0 12px 34px rgba(0, 0, 0, 0.16);
+  }
+
+  .glass-gold {
+    background: linear-gradient(160deg, #222b26 0%, #1b2724 100%);
+    border: 1px solid rgba(224, 169, 76, 0.28);
+    box-shadow:
+      inset 0 1px 0 rgba(224, 169, 76, 0.08),
+      0 12px 34px rgba(0, 0, 0, 0.16);
+  }
+
+  /* Popovers, menus, floating panels */
+  .glass-strong {
+    background: var(--color-panel-strong);
+    border: 1px solid #355052;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 24px 60px rgba(0, 0, 0, 0.45);
+  }
+
+  .gradient-border {
+    border: 1px solid #34494a;
+  }
+
+  .text-gradient {
+    background: linear-gradient(110deg, #f0c477 0%, #e4a94c 55%, #f4d49a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Scoreboard numerals: mono, tabular so live values don't jitter */
+  .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  /* Small all-caps label used above panels and stats */
+  .eyebrow {
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-gold-400);
+  }
+
+  /* Entrance used by panels that previously relied on tailwindcss-animate */
+  .animate-in {
+    animation: panel-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  button {
+    transition:
+      background-color 0.18s ease,
+      border-color 0.18s ease,
+      color 0.18s ease,
+      transform 0.18s ease;
+  }
 }
 
-.glass-gold {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.05));
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(245, 158, 11, 0.15);
+/* ─── Keyframes ─────────────────────────────────────────────── */
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.gradient-border {
-  position: relative;
-  border: 1px solid transparent;
-  background-clip: padding-box;
+@keyframes emblem-glow {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.95;
+  }
 }
 
-.gradient-border::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(245, 158, 11, 0.3));
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+@keyframes emblem-rotate {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* ─── Text Gradient ─────────────────────────────────────────── */
-.text-gradient {
-  background: linear-gradient(135deg, #f59e0b, #fbbf24, #f59e0b);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ─── Animations ────────────────────────────────────────────── */
 @keyframes orb-pulse {
   0%,
   100% {
@@ -243,6 +345,10 @@ body {
   animation: orb-float 6s ease-in-out infinite;
 }
 
+.animate-emblem-glow {
+  background: radial-gradient(circle, rgba(224, 169, 76, 0.3), transparent 66%);
+}
+
 /* ─── Scrollbar ─────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 8px;
@@ -254,21 +360,27 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.3);
+  background: #49615c;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 102, 241, 0.5);
+  background: #5d7a74;
 }
 
-/* ─── Selection ─────────────────────────────────────────────── */
-::selection {
-  background: rgba(245, 158, 11, 0.3);
-  color: #ffffff;
+/* ─── Motion preference ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-/* ─── Print Styles ──────────────────────────────────────────── */
+/* ─── Print ─────────────────────────────────────────────────── */
 @media print {
   .no-print {
     display: none !important;
@@ -277,40 +389,4 @@ body {
     background: white;
     color: black;
   }
-}
-
-
-/* StadiumMind visual refinement — broadcast control-room, not generic glass UI */
-:root {
-  --color-stadium-500: #397b72;
-  --color-stadium-600: #28645d;
-  --color-gold-500: #e0a94c;
-  --color-gold-600: #c68d31;
-}
-body {
-  background: #0c1518;
-  background-image: linear-gradient(180deg, #101c20 0%, #0b1316 48%, #0c1518 100%);
-}
-::selection { background: rgba(224,169,76,.28); color: #fff; }
-.glass, .glass-gold {
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  box-shadow: 0 12px 34px rgba(0,0,0,.16);
-}
-.glass { background: #142226; border: 1px solid #293b3d; }
-.glass-gold { background: #1d2825; border: 1px solid rgba(224,169,76,.24); }
-.gradient-border { border-color: #34494a; }
-.gradient-border::before { display: none; }
-.text-gradient {
-  background: linear-gradient(110deg,#f0c477 0%,#e4a94c 55%,#f4d49a 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
-button { transition: background-color .18s ease,border-color .18s ease,transform .18s ease; }
-button:hover { transform: translateY(-1px); }
-:focus-visible { outline-color: #e9bd70; }
-::-webkit-scrollbar-thumb { background: #49615c; }
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
